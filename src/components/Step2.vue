@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h2>Etapa 2 de 4</h2>
+    <p>Etapa 2 de 4</p>
+    <h2>{{ titulo }}</h2>
+
     <form @submit.prevent="next">
       <div v-if="formData.tipoCadastro === 'PF'">
         <label for="nome">Nome:</label>
@@ -31,17 +33,26 @@
       </div>
 
       <button type="button" @click="$emit('back')">Voltar</button>
-      <button type="submit">Continuar</button>
+      <button type="button" @click="$emit('next')">Continuar</button>
     </form>
   </div>
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 const props = defineProps(["formData"]);
 const emit = defineEmits(["next", "back"]);
 
+const titulo = computed(() =>
+    props.formData.tipoCadastro === "PF"
+        ? "Pessoa Física"
+        : props.formData.tipoCadastro === "PJ"
+            ? "Pessoa Jurídica"
+            : "Tipo de Cadastro"
+);
+
 function next() {
-  // Validação básica
   if (props.formData.tipoCadastro === "PF") {
     if (
         !props.formData.nome ||

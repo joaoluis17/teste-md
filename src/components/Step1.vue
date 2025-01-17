@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h2>Etapa 1 de 4</h2>
+    <p>Etapa 1 de 4</p>
+    <h2>Seja bem vindo(a)!</h2>
+
     <form @submit.prevent="next">
       <div>
         <label for="email">E-mail:</label>
@@ -20,7 +22,9 @@
 </template>
 
 <script setup>
-const props = defineProps(["formData"]);
+const props = defineProps({
+  formData: Object
+});
 const emit = defineEmits(["next", "back"]);
 
 function next() {

@@ -1,66 +1,37 @@
 <template>
   <div>
-    <h2>Etapa 4 de 4</h2>
-    <form @submit.prevent="next">
-      <div v-if="formData.tipoCadastro === 'PF'">
-        <label for="nome">Nome:</label>
-        <input id="nome" v-model="formData.nome" type="text" required />
+    <p>Etapa 4 de 4</p>
+    <h2>Revise suas informações</h2>
 
-        <label for="cpf">CPF:</label>
-        <input id="cpf" v-model="formData.cpf" type="text" required />
+    <div v-if="formData.tipoCadastro === 'PF'">
+      <p><strong>Nome:</strong> {{ formData.nome }}</p>
+      <p><strong>CPF:</strong> {{ formData.cpf }}</p>
+      <p><strong>Data de Nascimento:</strong> {{ formData.dataNascimento }}</p>
+      <p><strong>Telefone:</strong> {{ formData.telefone }}</p>
+    </div>
 
-        <label for="dataNascimento">Data de Nascimento:</label>
-        <input id="dataNascimento" v-model="formData.dataNascimento" type="date" required />
+    <div v-else-if="formData.tipoCadastro === 'PJ'">
+      <p><strong>Razão Social:</strong> {{ formData.razaoSocial }}</p>
+      <p><strong>CNPJ:</strong> {{ formData.cnpj }}</p>
+      <p><strong>Data de Abertura:</strong> {{ formData.dataAbertura }}</p>
+      <p><strong>Telefone:</strong> {{ formData.telefone }}</p>
+    </div>
 
-        <label for="telefone">Telefone:</label>
-        <input id="telefone" v-model="formData.telefone" type="text" required />
-      </div>
+    <button type="button" @click="$emit('back')">Voltar</button>
+    <button type="submit" @click="confirm">Confirmar</button>
 
-      <div v-else-if="formData.tipoCadastro === 'PJ'">
-        <label for="razaoSocial">Razão Social:</label>
-        <input id="razaoSocial" v-model="formData.razaoSocial" type="text" required />
-
-        <label for="cnpj">CNPJ:</label>
-        <input id="cnpj" v-model="formData.cnpj" type="text" required />
-
-        <label for="dataAbertura">Data de Abertura:</label>
-        <input id="dataAbertura" v-model="formData.dataAbertura" type="date" required />
-
-        <label for="telefone">Telefone:</label>
-        <input id="telefone" v-model="formData.telefone" type="text" required />
-      </div>
-
-      <button type="button" @click="$emit('back')">Voltar</button>
-      <button type="submit">Continuar</button>
-    </form>
   </div>
 </template>
 
 <script setup>
 const props = defineProps(["formData"]);
-const emit = defineEmits(["next", "back"]);
+const emit = defineEmits(["confirm", "back"]);
 
-function next() {
-  // Validação básica
-  if (props.formData.tipoCadastro === "PF") {
-    if (
-        !props.formData.nome ||
-        !props.formData.cpf ||
-        !props.formData.dataNascimento ||
-        !props.formData.telefone
-    ) {
-      return alert("Preencha todos os campos.");
-    }
-  } else if (props.formData.tipoCadastro === "PJ") {
-    if (
-        !props.formData.razaoSocial ||
-        !props.formData.cnpj ||
-        !props.formData.dataAbertura ||
-        !props.formData.telefone
-    ) {
-      return alert("Preencha todos os campos.");
-    }
-  }
-  emit("next");
+function confirm() {
+  emit("confirm");
 }
 </script>
+
+<style scoped>
+
+</style>
