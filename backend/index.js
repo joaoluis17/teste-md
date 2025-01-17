@@ -22,17 +22,14 @@ app.post("/cadastro", (req, res) => {
         senha
     } = req.body;
 
-    // Verificar campos obrigatórios
     if (!email || !tipoCadastro || !nome || !telefone || !senha) {
         return res.status(400).json({ error: "Todos os campos são obrigatórios." });
     }
 
-    // Validações adicionais
     if (tipoCadastro === "PF" && (!cpf || !dataNascimento)) {
         return res.status(400).json({ error: "CPF e data de nascimento são obrigatórios para Pessoa Física." });
     }
 
-    // Sucesso
     res.status(200).json({ message: "Cadastro realizado com sucesso!" });
 });
 

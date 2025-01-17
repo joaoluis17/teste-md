@@ -55,42 +55,36 @@ const errors = ref({
 });
 
 function validateStep() {
-  // Resetar os erros antes de validar
   Object.keys(errors.value).forEach(key => errors.value[key] = "");
 
-  console.log(formData)
+  const onlyNumbers = /^\d+$/;
 
   if (currentStep.value === 0) {
-    // Validação para o Step1
     if (!formData.value.email) {
       errors.value.email = "O email é obrigatório.";
     }
+    return formData.value.email !== "";
+  } else if (currentStep.value === 1) {
     if (!formData.value.nome) {
       errors.value.nome = "O nome é obrigatório.";
     }
-    console.log(errors.value);
-    return formData.value.email !== "" && formData.value.nome !== "";
-  } else if (currentStep.value === 1) {
-    // Validação para o Step2
-    if (!formData.value.cpf) {
-      errors.value.cpf = "O CPF é obrigatório.";
+    if (!formData.value.cpf || !onlyNumbers.test(formData.value.cpf)) {
+      errors.value.cpf = "O CPF é obrigatório e deve conter apenas números.";
     }
     if (!formData.value.dataNascimento) {
       errors.value.dataNascimento = "A data de nascimento é obrigatória.";
     }
-    return formData.value.cpf !== "" && formData.value.dataNascimento !== "";
-  } else if (currentStep.value === 2) {
-    // Validação para o Step3
-    if (!formData.value.telefone) {
-      errors.value.telefone = "O telefone é obrigatório.";
+    if (!formData.value.telefone || !onlyNumbers.test(formData.value.telefone)) {
+      errors.value.telefone = "O telefone é obrigatório e deve conter apenas números.";
     }
-    return formData.value.telefone !== "";
-  } else if (currentStep.value === 3) {
-    // Validação para o Step4
+    return formData.value.nome !== "" && formData.value.cpf !== "" && formData.value.dataNascimento !== "" && formData.value.telefone !== "";
+  } else if (currentStep.value === 2) {
     if (!formData.value.senha) {
       errors.value.senha = "A senha é obrigatória.";
     }
     return formData.value.senha !== "";
+  } else if (currentStep.value === 3) {
+
   }
 }
 
@@ -98,7 +92,6 @@ function nextStep() {
   if (validateStep()) {
     if (currentStep.value < steps.length - 1) {
       currentStep.value++;
-      console.log("Deu bom!")
     }
   } else {
     console.log("Validação falhou no passo atual.");

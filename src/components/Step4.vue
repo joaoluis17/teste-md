@@ -1,37 +1,66 @@
 <template>
   <div>
-    <p>Etapa 4 de 4</p>
-    <h2>Revise suas informações</h2>
+    <h2>Revise os seus dados</h2>
+    <form @submit.prevent="$emit('confirm')">
+      <div>
+        <label for="tipoCadastro">Tipo de Cadastro</label>
+        <select id="tipoCadastro" v-model="formData.tipoCadastro">
+          <option value="" disabled>Selecione</option>
+          <option value="PF">Pessoa Física</option>
+          <option value="PJ">Pessoa Jurídica</option>
+        </select>
+      </div>
 
-    <div v-if="formData.tipoCadastro === 'PF'">
-      <p><strong>Nome:</strong> {{ formData.nome }}</p>
-      <p><strong>CPF:</strong> {{ formData.cpf }}</p>
-      <p><strong>Data de Nascimento:</strong> {{ formData.dataNascimento }}</p>
-      <p><strong>Telefone:</strong> {{ formData.telefone }}</p>
-    </div>
+      <template v-if="formData.tipoCadastro === 'PF'">
+        <div>
+          <label for="nome">Nome</label>
+          <input id="nome" v-model="formData.nome" type="text" />
+        </div>
+        <div>
+          <label for="cpf">CPF</label>
+          <input id="cpf" v-model="formData.cpf" type="text" />
+        </div>
+        <div>
+          <label for="dataNascimento">Data de Nascimento</label>
+          <input id="dataNascimento" v-model="formData.dataNascimento" type="date" />
+        </div>
+        <div>
+          <label for="telefone">Telefone</label>
+          <input id="telefone" v-model="formData.telefone" type="tel" />
+        </div>
+      </template>
 
-    <div v-else-if="formData.tipoCadastro === 'PJ'">
-      <p><strong>Razão Social:</strong> {{ formData.razaoSocial }}</p>
-      <p><strong>CNPJ:</strong> {{ formData.cnpj }}</p>
-      <p><strong>Data de Abertura:</strong> {{ formData.dataAbertura }}</p>
-      <p><strong>Telefone:</strong> {{ formData.telefone }}</p>
-    </div>
+      <template v-if="formData.tipoCadastro === 'PJ'">
+        <div>
+          <label for="razaoSocial">Razão Social</label>
+          <input id="razaoSocial" v-model="formData.razaoSocial" type="text" />
+        </div>
+        <div>
+          <label for="cnpj">CNPJ</label>
+          <input id="cnpj" v-model="formData.cnpj" type="text" />
+        </div>
+        <div>
+          <label for="dataAbertura">Data de Abertura</label>
+          <input id="dataAbertura" v-model="formData.dataAbertura" type="date" />
+        </div>
+        <div>
+          <label for="telefone">Telefone</label>
+          <input id="telefone" v-model="formData.telefone" type="tel" />
+        </div>
+      </template>
 
-    <button type="button" @click="$emit('back')">Voltar</button>
-    <button type="submit" @click="confirm">Confirmar</button>
-
+      <button type="button" @click="$emit('back')">Voltar</button>
+      <button type="submit">Confirmar</button>
+    </form>
   </div>
 </template>
 
 <script setup>
-const props = defineProps(["formData"]);
-const emit = defineEmits(["confirm", "back"]);
+const props = defineProps({
+  formData: Object,
+});
 
-function confirm() {
-  emit("confirm");
-}
+function filterNumericInput(field) {
+  props.formData[field] = props.formData[field].replace(/\D/g, "");
+};
 </script>
-
-<style scoped>
-
-</style>
