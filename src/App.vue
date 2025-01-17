@@ -55,7 +55,7 @@ const errors = ref({
 });
 
 function validateStep() {
-  Object.keys(errors.value).forEach(key => errors.value[key] = "");
+  Object.keys(errors.value).forEach((key) => (errors.value[key] = ""));
 
   const onlyNumbers = /^\d+$/;
 
@@ -65,26 +65,37 @@ function validateStep() {
     }
     return formData.value.email !== "";
   } else if (currentStep.value === 1) {
-    if (!formData.value.nome) {
-      errors.value.nome = "O nome é obrigatório.";
+    // Validação para Pessoa Física (PF)
+    if (formData.value.tipoCadastro === "PF") {
+      if (!formData.value.nome) {
+        errors.value.nome = "O nome é obrigatório.";
+      }
+      if (!formData.value.cpf || !onlyNumbers.test(formData.value.cpf) || formData.value.cpf.length !== 11) {
+        errors.value.cpf = "O CPF deve conter apenas 11 números.";
+      }
+      if (!formData.value.telefone || !onlyNumbers.test(formData.value.telefone) || (formData.value.telefone.length !== 10 && formData.value.telefone.length !== 11)) {
+        errors.value.telefone = "O telefone deve ter 10 ou 11 dígitos.";
+      }
+      return formData.value.nome && formData.value.cpf && formData.value.telefone;
     }
-    if (!formData.value.cpf || !onlyNumbers.test(formData.value.cpf)) {
-      errors.value.cpf = "O CPF é obrigatório e deve conter apenas números.";
+    // Validação para Pessoa Jurídica (PJ)
+    else if (formData.value.tipoCadastro === "PJ") {
+      if (!formData.value.razaoSocial) {
+        errors.value.razaoSocial = "A razão social é obrigatória.";
+      }
+      if (!formData.value.cnpj || !onlyNumbers.test(formData.value.cnpj) || formData.value.cnpj.length !== 14) {
+        errors.value.cnpj = "O CNPJ deve conter apenas 14 números.";
+      }
+      if (!formData.value.telefone || !onlyNumbers.test(formData.value.telefone) || (formData.value.telefone.length !== 10 && formData.value.telefone.length !== 11)) {
+        errors.value.telefone = "O telefone deve ter 10 ou 11 dígitos.";
+      }
+      return formData.value.razaoSocial && formData.value.cnpj && formData.value.telefone;
     }
-    if (!formData.value.dataNascimento) {
-      errors.value.dataNascimento = "A data de nascimento é obrigatória.";
-    }
-    if (!formData.value.telefone || !onlyNumbers.test(formData.value.telefone)) {
-      errors.value.telefone = "O telefone é obrigatório e deve conter apenas números.";
-    }
-    return formData.value.nome !== "" && formData.value.cpf !== "" && formData.value.dataNascimento !== "" && formData.value.telefone !== "";
   } else if (currentStep.value === 2) {
     if (!formData.value.senha) {
       errors.value.senha = "A senha é obrigatória.";
     }
     return formData.value.senha !== "";
-  } else if (currentStep.value === 3) {
-
   }
 }
 
@@ -111,11 +122,27 @@ async function submitForm(event) {
     return;
   }
 
+  console.log("Dados enviados:", formData.value);
+
+  // Criar uma cópia dos dados reais do objeto reativo
+  const filteredData = { ...formData.value };
+
+  // Filtrar dados com base no tipo de cadastro
+  if (formData.value.tipoCadastro === "PJ") {
+    delete filteredData.nome;
+    delete filteredData.cpf;
+    delete filteredData.dataNascimento;
+  } else if (formData.value.tipoCadastro === "PF") {
+    delete filteredData.razaoSocial;
+    delete filteredData.cnpj;
+    delete filteredData.dataAbertura;
+  }
+
   try {
     const response = await fetch("http://localhost:3000/cadastro", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData.value),
+      body: JSON.stringify(filteredData), // Usar os dados filtrados
     });
 
     if (!response.ok) {
@@ -147,3 +174,4 @@ async function submitForm(event) {
   }
 }
 </script>
+

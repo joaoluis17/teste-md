@@ -23,11 +23,19 @@ function resetForm() {
 }
 
 button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #007bff;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #ffa500;
   color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #ff8c00;
+  transform: scale(1.02);
 }
 </style>

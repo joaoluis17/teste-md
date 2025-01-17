@@ -1,75 +1,45 @@
 <template>
-  <div>
-    <p>Etapa 2 de 4</p>
-    <h2>{{ titulo }}</h2>
+  <div class="form-container">
+    <p class="step-indicator">Etapa <strong>2</strong> de 4</p>
+    <h2 class="form-title">{{ titulo }}</h2>
 
-    <form @submit.prevent="next">
+    <form @submit.prevent="next" class="form">
       <div v-if="formData.tipoCadastro === 'PF'">
-        <label for="nome">Nome:</label>
-        <input id="nome" v-model="formData.nome" type="text" required />
+        <label for="nome" class="form-label">Nome:</label>
+        <input id="nome" class="input" v-model="formData.nome" type="text" placeholder="João da Silva" required />
 
-        <label for="cpf">CPF:</label>
-        <input
-            id="cpf"
-            v-model="formData.cpf"
-            type="text"
-            inputmode="numeric"
-            @input="filterNumericInput('cpf')"
-            @blur="validateLength('cpf', 11)"
-            required
-        />
+        <label for="cpf" class="form-label">CPF:</label>
+        <input id="cpf" class="input" v-model="formData.cpf" type="text" inputmode="numeric" @input="filterNumericInput('cpf', 11)" placeholder="123.456.789-12" required />
         <p class="error" v-if="errors.cpf">{{ errors.cpf }}</p>
 
-        <label for="dataNascimento">Data de Nascimento:</label>
-        <input id="dataNascimento" v-model="formData.dataNascimento" type="date" required />
+        <label for="dataNascimento" class="form-label">Data de Nascimento:</label>
+        <input id="dataNascimento" class="input" v-model="formData.dataNascimento" type="date" required />
 
-        <label for="telefone">Telefone:</label>
-        <input
-            id="telefone"
-            v-model="formData.telefone"
-            type="text"
-            inputmode="numeric"
-            @input="filterNumericInput('telefone')"
-            @blur="validateLength('telefone', 10)"
-            required
-        />
+        <label for="telefone" class="form-label">Telefone:</label>
+        <input id="telefone" class="input" v-model="formData.telefone" type="text" inputmode="numeric" @input="filterNumericInput('telefone', 11)" placeholder="(11) 91234-5678" required />
         <p class="error" v-if="errors.telefone">{{ errors.telefone }}</p>
       </div>
 
       <div v-else-if="formData.tipoCadastro === 'PJ'">
-        <label for="razaoSocial">Razão Social:</label>
-        <input id="razaoSocial" v-model="formData.razaoSocial" type="text" required />
+        <label for="razaoSocial" class="form-label">Razão Social:</label>
+        <input id="razaoSocial" class="input" v-model="formData.razaoSocial" type="text" placeholder="Mercado Bitcoin" required />
 
-        <label for="cnpj">CNPJ:</label>
-        <input
-            id="cnpj"
-            v-model="formData.cnpj"
-            type="text"
-            inputmode="numeric"
-            @input="filterNumericInput('cnpj')"
-            @blur="validateLength('cnpj', 14)"
-            required
-        />
+        <label for="cnpj" class="form-label">CNPJ:</label>
+        <input id="cnpj" class="input" v-model="formData.cnpj" type="text" inputmode="numeric" @input="filterNumericInput('cnpj', 14)" placeholder="10.123.456/0001-78" required/>
         <p class="error" v-if="errors.cnpj">{{ errors.cnpj }}</p>
 
-        <label for="dataAbertura">Data de Abertura:</label>
-        <input id="dataAbertura" v-model="formData.dataAbertura" type="date" required />
+        <label for="dataAbertura" class="form-label">Data de Abertura:</label>
+        <input id="dataAbertura" class="input" v-model="formData.dataAbertura" type="date" required />
 
-        <label for="telefone">Telefone:</label>
-        <input
-            id="telefone"
-            v-model="formData.telefone"
-            type="text"
-            inputmode="numeric"
-            @input="filterNumericInput('telefone')"
-            @blur="validateLength('telefone', 10)"
-            required
-        />
+        <label for="telefone" class="form-label">Telefone:</label>
+        <input id="telefone" class="input" v-model="formData.telefone" type="text" inputmode="numeric" @input="filterNumericInput('telefone', 11)" placeholder="(11) 91234-5678" required/>
         <p class="error" v-if="errors.telefone">{{ errors.telefone }}</p>
       </div>
 
-      <button type="button" @click="$emit('back')">Voltar</button>
-      <button type="submit">Continuar</button>
+      <div class="buttons">
+        <button type="button" @click="$emit('back')" class="back-button">Voltar</button>
+        <button type="submit" class="form-button">Continuar</button>
+      </div>
     </form>
   </div>
 </template>
@@ -94,14 +64,18 @@ const errors = reactive({
   telefone: "",
 });
 
-function filterNumericInput(field) {
+function filterNumericInput(field, maxLength) {
   props.formData[field] = props.formData[field].replace(/\D/g, "");
+
+  if (props.formData[field].length > maxLength) {
+    props.formData[field] = props.formData[field].slice(0, maxLength);
+  }
 }
 
-function validateLength(field, length) {
+function validateLength(field, validLengths) {
   const fieldLength = props.formData[field]?.length || 0;
-  if (fieldLength !== length) {
-    errors[field] = `O campo deve ter exatamente ${length} dígitos.`;
+  if (!validLengths.includes(fieldLength)) {
+    errors[field] = `O campo deve ter ${validLengths.join(' ou ')} dígitos.`;
     return false;
   } else {
     errors[field] = "";
@@ -114,8 +88,8 @@ function next() {
 
   if (props.formData.tipoCadastro === "PF") {
     valid =
-        validateLength("cpf", 11) &&
-        validateLength("telefone", 10) &&
+        validateLength("cpf", [11]) &&
+        validateLength("telefone", [10, 11]) &&
         props.formData.nome &&
         props.formData.dataNascimento;
 
@@ -125,8 +99,8 @@ function next() {
     }
   } else if (props.formData.tipoCadastro === "PJ") {
     valid =
-        validateLength("cnpj", 14) &&
-        validateLength("telefone", 10) &&
+        validateLength("cnpj", [14]) &&
+        validateLength("telefone", [10, 11]) &&
         props.formData.razaoSocial &&
         props.formData.dataAbertura;
 
@@ -139,12 +113,3 @@ function next() {
   emit("next");
 }
 </script>
-
-
-<style>
-.error {
-  color: red;
-  font-size: 0.9em;
-  margin-top: 4px;
-}
-</style>
