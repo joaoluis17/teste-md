@@ -1,9 +1,10 @@
 # Desafio MB Web
 
 ### Instruções para Funcionamento
-- Realizar as instalações do pacotes do npm: npm install
+- Realizar as instalações do pacotes do npm com npm install
 - Realizar o build do projeto: npm run dev
 - Abrir nova aba e ir para a pasta "backend"
+- Rodar novamente o comando npm install
 - Rodar o comando node index.js
 
 ### Cliente
@@ -23,8 +24,4 @@
     - Passo 4: Revisão dos dados e confirmação
 2. **Validação de campos**: Garantia de que todos os campos são preenchidos corretamente, como formato de e-mail, CPF, CNPJ, e datas válidas.
 3. **Responsividade**: Layout adaptável para diferentes tamanhos de tela.
-
-### Aplicação Servidor
-- **GET /registration**: Endpoint que serve a página HTML inicial.
-- **POST /registratio
 
