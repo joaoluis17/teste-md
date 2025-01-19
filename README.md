@@ -1,5 +1,30 @@
-# Vue 3 + Vite
+# Desafio MB Web
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+### Instruções para Funcionamento
+- Realizar as instalações do pacotes do npm: npm install
+- Realizar o build do projeto: npm run dev
+- Abrir nova aba e ir para a pasta "backend"
+- Rodar o comando node index.js
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+### Cliente
+- **Vue.js 3** (Composition API com `<script setup>` e Vite)
+- **JavaScript puro** (sem bibliotecas adicionais para gerenciamento de estado ou requisições HTTP)
+- **CSS** (estilização desenvolvida manualmente)
+
+### Servidor
+- **Node.js** com **Express**
+- APIs simples para simulação de cadastro
+
+### Aplicação Cliente
+1. **Cadastro modular**: Dividido em 4 passos:
+    - Passo 1: E-mail e tipo de cadastro (Pessoa Física ou Jurídica)
+    - Passo 2: Informações específicas (PF ou PJ)
+    - Passo 3: Definição de senha
+    - Passo 4: Revisão dos dados e confirmação
+2. **Validação de campos**: Garantia de que todos os campos são preenchidos corretamente, como formato de e-mail, CPF, CNPJ, e datas válidas.
+3. **Responsividade**: Layout adaptável para diferentes tamanhos de tela.
+
+### Aplicação Servidor
+- **GET /registration**: Endpoint que serve a página HTML inicial.
+- **POST /registratio
+
