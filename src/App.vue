@@ -65,7 +65,6 @@ function validateStep() {
     }
     return formData.value.email !== "";
   } else if (currentStep.value === 1) {
-    // Validação para Pessoa Física (PF)
     if (formData.value.tipoCadastro === "PF") {
       if (!formData.value.nome) {
         errors.value.nome = "O nome é obrigatório.";
@@ -78,7 +77,6 @@ function validateStep() {
       }
       return formData.value.nome && formData.value.cpf && formData.value.telefone;
     }
-    // Validação para Pessoa Jurídica (PJ)
     else if (formData.value.tipoCadastro === "PJ") {
       if (!formData.value.razaoSocial) {
         errors.value.razaoSocial = "A razão social é obrigatória.";
@@ -122,12 +120,8 @@ async function submitForm(event) {
     return;
   }
 
-  console.log("Dados enviados:", formData.value);
-
-  // Criar uma cópia dos dados reais do objeto reativo
   const filteredData = { ...formData.value };
 
-  // Filtrar dados com base no tipo de cadastro
   if (formData.value.tipoCadastro === "PJ") {
     delete filteredData.nome;
     delete filteredData.cpf;
@@ -138,11 +132,19 @@ async function submitForm(event) {
     delete filteredData.dataAbertura;
   }
 
+  if (filteredData.tipoCadastro === "PJ" && (!filteredData.razaoSocial || !filteredData.cnpj || !filteredData.dataAbertura)) {
+    console.error("Campos obrigatórios de PJ não preenchidos.");
+    return;
+  } else if (filteredData.tipoCadastro === "PF" && (!filteredData.nome || !filteredData.cpf || !filteredData.dataNascimento)) {
+    console.error("Campos obrigatórios de PF não preenchidos.");
+    return;
+  }
+
   try {
     const response = await fetch("http://localhost:3000/cadastro", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(filteredData), // Usar os dados filtrados
+      body: JSON.stringify(filteredData),
     });
 
     if (!response.ok) {

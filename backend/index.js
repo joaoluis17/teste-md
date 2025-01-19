@@ -16,18 +16,29 @@ app.post("/cadastro", (req, res) => {
         email,
         tipoCadastro,
         nome,
+        razaoSocial,
         cpf,
+        cnpj,
         dataNascimento,
+        dataAbertura,
         telefone,
-        senha
+        senha,
     } = req.body;
 
-    if (!email || !tipoCadastro || !nome || !telefone || !senha) {
+    if (!email || !tipoCadastro || !telefone || !senha) {
         return res.status(400).json({ error: "Todos os campos são obrigatórios." });
     }
 
-    if (tipoCadastro === "PF" && (!cpf || !dataNascimento)) {
-        return res.status(400).json({ error: "CPF e data de nascimento são obrigatórios para Pessoa Física." });
+    if (tipoCadastro === "PF") {
+        if (!nome || !cpf || !dataNascimento) {
+            return res.status(400).json({ error: "Nome, CPF e data de nascimento são obrigatórios para Pessoa Física." });
+        }
+    }
+
+    else if (tipoCadastro === "PJ") {
+        if (!razaoSocial || !cnpj || !dataAbertura) {
+            return res.status(400).json({ error: "Razão social, CNPJ e data de abertura são obrigatórios para Pessoa Jurídica." });
+        }
     }
 
     res.status(200).json({ message: "Cadastro realizado com sucesso!" });
